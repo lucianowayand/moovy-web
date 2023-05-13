@@ -1,18 +1,23 @@
 import useWindowDimensions from "../../hooks/useWindowDimensions"
 import { Box, Card, Typography } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useAuth } from "../../context/AuthContext"
 import './style.css'
 
 export default function Login() {
-    const [email, setEmail] = useState<string>()
-    const [password, setPassword] = useState<string>()
-
+    const { logIn, user } = useAuth()
     const { width } = useWindowDimensions()
+
+    const [password, setPassword] = useState<string>("")
+    const [email, setEmail] = useState<string>("")
+
+    useEffect(() => {
+        if (user) window.location.href = '/dashboard'
+    }, [user])
 
     const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        console.log({ email, password })
+        logIn(email, password)
     }
 
     return <Box display="flex" height="100vh" width="100vw">

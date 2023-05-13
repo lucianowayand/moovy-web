@@ -1,44 +1,76 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { api } from "../services/api";
+import { decrypt, encrypt } from "../services/crypto";
 
 interface User {
     id: number;
-    name: string;
+    full_name: string;
     email: string;
 }
 
 interface AuthContextValues {
-    user: User | null;
+    user: User | null | undefined;
     setUser: (user: User | null) => void;
     logOut: () => void;
-} 
+    logIn: (email: string, password: string) => void;
+}
 
 const AuthContext = createContext<AuthContextValues>({
-    user: null,
-    setUser: () => {},
-    logOut: () => {},
+    user: undefined,
+    setUser: () => { },
+    logOut: () => { },
+    logIn: () => { }
 })
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>({
-        id: 1,
-        name: 'John Doe',
-        email: ''
-    });
+    const [user, setUser] = useState<User | null>();
+
+    useEffect(() => {
+        if(localStorage.getItem('session')){
+            const decryptedUser = JSON.parse(decrypt(localStorage.getItem('session') || '')).input as User
+            if(decryptedUser) setUser(decryptedUser)    
+        } else {
+            setUser(undefined)
+        }
+    }, [])
+
+    // Printing user for debugging purposes
+    useEffect(() => {
+        console.log(user)
+    }, [user])
 
     function logOut() {
-        setUser(null);
-        window.localStorage.removeItem('token');
-        window.location.href = '/';
+        setUser(undefined);
+        localStorage.removeItem('session')
+        window.location.href = '/'
+    }
+
+    async function logIn(email: string, password: string) {
+        try {
+            const res = await api.post('/users/login', { email, password })
+            const user = {
+                id: res.data.id,
+                full_name: res.data.full_name,
+                email: res.data.email
+            }
+            setUser(user)
+            const encryptedUser = encrypt(user)
+            localStorage.setItem('session', encryptedUser)
+            window.location.href = '/dashboard'
+
+        } catch (error) {
+            alert(error)
+        }
     }
 
     return (
-        <AuthContext.Provider value={{ user, setUser, logOut }}>
+        <AuthContext.Provider value={{ user, setUser, logOut, logIn }}>
             {children}
         </AuthContext.Provider>
     )
 }
 
-function useAuth(){
+function useAuth() {
     return useContext(AuthContext);
 }
 
