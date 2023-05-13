@@ -1,9 +1,11 @@
+import { Box, CircularProgress, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { EmptyQuery } from "../../components/empty-query";
 import { Movie } from "../../utils/types";
-import { Box, Card, CircularProgress, Grid, Typography } from "@mui/material";
 import { api } from "../../services/api";
+
 import DashboardLayout from "../../components/dashboard-layout";
+import MovieCard from "../../components/movie-card";
 import SearchIcon from '@mui/icons-material/Search';
 import './style.css';
 
@@ -50,7 +52,9 @@ export default function Search() {
             {movies.length > 0 ? <Grid container>
                 {movies.map((movie) => {
                     return <Grid xs={4}>
-                        <MovieCard movie={movie} />
+                        <MovieCard movie={movie}>
+                            <button>Add to My Library</button>
+                        </MovieCard>
                     </Grid>
                 })}
             </Grid> : <Box mt={15}>
@@ -62,19 +66,3 @@ export default function Search() {
     </DashboardLayout>
 }
 
-function MovieCard({ movie }: { movie: Movie }) {
-    return <Box margin={3}>
-        <Card>
-            <Box padding={2} display="flex" justifyContent="center" alignItems="center" flexDirection="column">
-                <img src={movie.Poster} alt={movie.Title} width="300px" height="400px" />
-                <Box mt={2} display="flex" justifyContent="space-between" alignItems="center" width="100%">
-                    <Typography sx={{ fontWeight: 600 }} variant="h6">{movie.Title}</Typography>
-                    <Typography sx={{ color: "a1a1a1" }} variant="body1">{movie.imdbRating}</Typography>
-                </Box>
-                <Box mt={1}>
-                    <button>Add to My Library</button>
-                </Box>
-            </Box>
-        </Card>
-    </Box>
-}
