@@ -1,0 +1,35 @@
+.background-gradient {
+    background: #F2911B;
+;
+    background: linear-gradient(90deg, #F2911B 0%, hsla(50, 90%, 59%, 1) 100%);
+    background: -moz-linear-gradient(90deg, #F2911B 0%, hsla(50, 90%, 59%, 1) 100%);
+    background: -webkit-linear-gradient(90deg, #F2911B 0%, hsla(50, 90%, 59%, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#F2911B", endColorstr="#F5D538", GradientType=1);
+}
+
+input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #F2911B;
+    border-radius: 3px;
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px 20px;
+    margin: 8px 0;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #db8419;
+}
+
+button:active {
+    background-color: #e68a1a;
+}
