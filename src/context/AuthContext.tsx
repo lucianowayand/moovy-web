@@ -28,9 +28,13 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if(localStorage.getItem('session')){
             const decryptedUser = JSON.parse(decrypt(localStorage.getItem('session') || '')).input as User
-            if(decryptedUser) setUser(decryptedUser)    
+            if(decryptedUser){
+                setUser(decryptedUser)
+            }    
         } else {
-            setUser(undefined)
+            if(window.location.pathname !== '/'){
+                logOut()
+            }
         }
     }, [])
 
