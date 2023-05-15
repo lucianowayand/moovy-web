@@ -30,7 +30,6 @@ export default function Search() {
             if (res.data.length > 0) {
                 const moviePromises = res.data.map(async (movie: Movie) => {
                     const movieRes = await api.get(`library/user/${user?.id}/movie/${movie.imdbID}`);
-                    console.log(movieRes.data)
                     return {
                         ...movie,
                         imdbRating: movieRes.data.movie.imdbRating,
@@ -42,7 +41,8 @@ export default function Search() {
                 setMovies(updatedMovies);
             }
         } catch (error) {
-            console.log(error);
+            setMovies([]);
+            alert(error);
         }
         setLoading(false);
     }
