@@ -47,28 +47,7 @@ export default function Search() {
         setLoading(false);
     }
 
-    async function buttonInteraction(movie: Movie, index: number) {
-        if (movie.inLibrary) {
-            const res = await api.delete(`library/user/${user?.id}/movie/${movie.imdbID}`);
-            if (res.status === 200) {
-                const newMovies = [...movies];
-                newMovies[index].inLibrary = false;
-                setMovies(newMovies);
-            } else {
-                alert("Something went wrong, please try again later");
-            }
-
-        } else {
-            const res = await api.post(`library/user/${user?.id}/movie/${movie.imdbID}`);
-            if (res.status === 201) {
-                const newMovies = [...movies];
-                newMovies[index].inLibrary = true;
-                setMovies(newMovies);
-            } else {
-                alert("Something went wrong, please try again later");
-            }
-        }
-    }
+    
 
     return <DashboardLayout>
         <Box display="flex" alignItems="center">
@@ -79,9 +58,7 @@ export default function Search() {
             {movies.length > 0 ? <Grid container>
                 {movies.map((movie, index) => {
                     return <Grid xs={4}>
-                        <MovieCard movie={movie}>
-                            <button className={movie.inLibrary ? "in-library" : undefined} onClick={() => buttonInteraction(movie, index)}>{movie.inLibrary ? "Remove from My Library" : "Add to My Library"}</button>
-                        </MovieCard>
+                        <MovieCard movie={movie} moviesArray={movies} index={index} setterFunction={setMovies} />
                     </Grid>
                 })}
             </Grid> : <Box mt={15}>

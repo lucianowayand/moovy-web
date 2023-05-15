@@ -1,8 +1,35 @@
 import { Box, Card, Typography } from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Movie } from "../../utils/types";
+import { useAuth } from "../../context/AuthContext";
+import { api } from "../../services/api";
 
-export default function MovieCard({ movie, children }: { movie: Movie, children: any }) {
+export default function MovieCard({ movie, moviesArray, index, setterFunction }: { movie: Movie, moviesArray: Movie[], index: number, setterFunction: any }) {
+    const { user } = useAuth();
+
+    async function buttonInteraction(movie: Movie) {
+        if (movie.inLibrary) {
+            const res = await api.delete(`library/user/${user?.id}/movie/${movie.imdbID}`);
+            if (res.status === 200) {
+                const newMovies = [...moviesArray];
+                newMovies[index].inLibrary = false;
+                setterFunction(newMovies);
+            } else {
+                alert("Something went wrong, please try again later");
+            }
+
+        } else {
+            const res = await api.post(`library/user/${user?.id}/movie/${movie.imdbID}`);
+            if (res.status === 201) {
+                const newMovies = [...moviesArray];
+                newMovies[index].inLibrary = true;
+                setterFunction(newMovies);
+            } else {
+                alert("Something went wrong, please try again later");
+            }
+        }
+    }
+
     return <Box margin={3}>
         <Card>
             <Box padding={2} display="flex" justifyContent="center" alignItems="center" flexDirection="column">
@@ -15,7 +42,7 @@ export default function MovieCard({ movie, children }: { movie: Movie, children:
                     </Box>
                 </Box>
                 <Box mt={1}>
-                    {children}
+                    <button className={movie.inLibrary ? "in-library" : undefined} onClick={() => buttonInteraction(movie)}>{movie.inLibrary ? "Remove from My Library" : "Add to My Library"}</button>
                 </Box>
             </Box>
         </Card>
