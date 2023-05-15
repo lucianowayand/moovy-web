@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }: any) {
                         <Link to="/dashboard" className={`menu-link ${window.location.pathname === "/dashboard/my-library" ? "inactive" : undefined}`}>Search</Link>
                     </Box>
                     <Box>
-                        <Link to="/dashboard/my-library" className={`menu-link ${window.location.pathname === "/dashboard" ? "inactive" : undefined}`}>My List</Link>
+                        <Link to="/dashboard/my-library" className={`menu-link ${window.location.pathname === "/dashboard" ? "inactive" : undefined}`}>My Library</Link>
                     </Box>
                 </Box>
                 <Box mt="3em">

@@ -8,8 +8,11 @@ import DashboardLayout from "../../components/dashboard-layout";
 import MovieCard from "../../components/movie-card";
 import SearchIcon from '@mui/icons-material/Search';
 import './style.css';
+import { useAuth } from "../../context/AuthContext";
 
 export default function Search() {
+    const { user } = useAuth();
+
     const [query, setQuery] = useState("");
     const [movies, setMovies] = useState<Movie[]>([]);
     const [loading, setLoading] = useState(false);
@@ -26,10 +29,12 @@ export default function Search() {
             const res = await api.get(`movies?search=${query}`);
             if (res.data.length > 0) {
                 const moviePromises = res.data.map(async (movie: Movie) => {
-                    const movieRes = await api.get(`movies/detail?id=${movie.imdbID}`);
+                    const movieRes = await api.get(`library/user/${user?.id}/movie/${movie.imdbID}`);
+                    console.log(movieRes.data)
                     return {
                         ...movie,
-                        imdbRating: movieRes.data.imdbRating
+                        imdbRating: movieRes.data.movie.imdbRating,
+                        inLibrary: movieRes.data.inLibrary
                     };
                 });
 
@@ -42,6 +47,28 @@ export default function Search() {
         setLoading(false);
     }
 
+    async function buttonInteraction(movie: Movie, index: number) {
+        if (movie.inLibrary) {
+            const res = await api.delete(`library/user/${user?.id}/movie/${movie.imdbID}`);
+            if (res.status === 200) {
+                const newMovies = [...movies];
+                newMovies[index].inLibrary = false;
+                setMovies(newMovies);
+            } else {
+                alert("Something went wrong, please try again later");
+            }
+
+        } else {
+            const res = await api.post(`library/user/${user?.id}/movie/${movie.imdbID}`);
+            if (res.status === 201) {
+                const newMovies = [...movies];
+                newMovies[index].inLibrary = true;
+                setMovies(newMovies);
+            } else {
+                alert("Something went wrong, please try again later");
+            }
+        }
+    }
 
     return <DashboardLayout>
         <Box display="flex" alignItems="center">
@@ -50,10 +77,10 @@ export default function Search() {
         </Box>
         {!loading ? <Box mt={3}>
             {movies.length > 0 ? <Grid container>
-                {movies.map((movie) => {
+                {movies.map((movie, index) => {
                     return <Grid xs={4}>
                         <MovieCard movie={movie}>
-                            <button>Add to My Library</button>
+                            <button className={movie.inLibrary ? "in-library" : undefined} onClick={() => buttonInteraction(movie, index)}>{movie.inLibrary ? "Remove from My Library" : "Add to My Library"}</button>
                         </MovieCard>
                     </Grid>
                 })}

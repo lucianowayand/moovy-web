@@ -10,3 +10,11 @@ input {
     outline: none;
     transition: all ease .3s;
 }
+
+.in-library{
+    background-color: #dd3636;
+}
+
+.in-library:hover{
+    background-color: #ca4242;
+}
