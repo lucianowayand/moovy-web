@@ -57,7 +57,7 @@ export default function Search() {
         {!loading ? <Box mt={3}>
             {movies.length > 0 ? <Grid container>
                 {movies.map((movie, index) => {
-                    return <Grid xs={4}>
+                    return <Grid item xs={4}>
                         <MovieCard movie={movie} moviesArray={movies} index={index} setterFunction={setMovies} />
                     </Grid>
                 })}
