@@ -1,11 +1,14 @@
-import { Box, Card, Typography } from "@mui/material";
+import { Alert, Box, Card, Snackbar, Typography } from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Movie } from "../../utils/types";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../services/api";
+import { useState } from "react";
 
 export default function MovieCard({ movie, moviesArray, index, setterFunction }: { movie: Movie, moviesArray: Movie[], index: number, setterFunction: any }) {
     const { user } = useAuth();
+    const [toast, setToast] = useState(false);
+    const [snackbarSuccess, setSnackbarSuccess] = useState(false);
 
     async function buttonInteraction(movie: Movie) {
         if (movie.inLibrary) {
@@ -14,6 +17,8 @@ export default function MovieCard({ movie, moviesArray, index, setterFunction }:
                 const newMovies = [...moviesArray];
                 newMovies[index].inLibrary = false;
                 setterFunction(newMovies);
+                setSnackbarSuccess(false);
+                setToast(true);
             } else {
                 alert("Something went wrong, please try again later");
             }
@@ -24,6 +29,8 @@ export default function MovieCard({ movie, moviesArray, index, setterFunction }:
                 const newMovies = [...moviesArray];
                 newMovies[index].inLibrary = true;
                 setterFunction(newMovies);
+                setSnackbarSuccess(true);
+                setToast(true);
             } else {
                 alert("Something went wrong, please try again later");
             }
@@ -31,6 +38,11 @@ export default function MovieCard({ movie, moviesArray, index, setterFunction }:
     }
 
     return <Box margin={3}>
+        <Snackbar open={toast} autoHideDuration={2000} onClose={() => setToast(false)} anchorOrigin={{ vertical:'top', horizontal:'right' }}>
+        <Alert onClose={() => setToast(false)} severity={snackbarSuccess ? "success" : "error"} sx={{ width: '100%' }}>
+          {`Movie ${snackbarSuccess ? "added to" : "removed from"} My Library!`}
+        </Alert>
+      </Snackbar>
         <Card>
             <Box padding={2} display="flex" justifyContent="center" alignItems="center" flexDirection="column">
                 <img src={movie.Poster} alt={movie.Title} width="300px" height="400px" />
@@ -46,5 +58,5 @@ export default function MovieCard({ movie, moviesArray, index, setterFunction }:
                 </Box>
             </Box>
         </Card>
-    </Box>
+    </Box >
 }
