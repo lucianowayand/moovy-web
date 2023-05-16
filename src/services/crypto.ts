@@ -8,6 +8,7 @@ export function encrypt(input: any) {
 }
 
 export function decrypt(input: any) {
+    if (!input) return '';
     const decipher = CryptoJS.AES.decrypt(input, password).toString(CryptoJS.enc.Utf8)
     return decipher;
 }

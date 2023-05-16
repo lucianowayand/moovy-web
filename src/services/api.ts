@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { decrypt } from './crypto';
 
+const token = JSON.parse(decrypt(localStorage.getItem('session')) || '{}').input || '';
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers:{
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + JSON.parse(decrypt(localStorage.getItem('session'))).input || ''
+    'Authorization': 'Bearer ' + token 
   }
 });
 
