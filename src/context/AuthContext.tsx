@@ -26,13 +26,20 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>();
 
     useEffect(() => {
-        if(localStorage.getItem('session')){
-            const decryptedUser = JSON.parse(decrypt(localStorage.getItem('session') || '')).input as User
-            if(decryptedUser){
-                setUser(decryptedUser)
-            }    
+        const cookie = localStorage.getItem('session')
+        if (cookie) {
+            const jwt = JSON.parse(decrypt(cookie)).input
+            const payload = jwt.split(".")[1];
+            const decryptedUser = JSON.parse(atob(payload));
+            if (decryptedUser) {
+                setUser({
+                    id: decryptedUser.sub,
+                    full_name: decryptedUser.full_name,
+                    email: decryptedUser.email
+                })
+            }
         } else {
-            if(window.location.pathname !== '/'){
+            if (window.location.pathname !== '/') {
                 logOut()
             }
         }
@@ -52,14 +59,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     async function logIn(email: string, password: string) {
         try {
             const res = await api.post('/users/login', { email, password })
-            const user = {
-                id: res.data.id,
-                full_name: res.data.full_name,
-                email: res.data.email
-            }
-            setUser(user)
-            const encryptedUser = encrypt(user)
-            localStorage.setItem('session', encryptedUser)
+            const encryptedSession = encrypt(res.data)
+            localStorage.setItem('session', encryptedSession)
             window.location.href = '/dashboard'
 
         } catch (error) {

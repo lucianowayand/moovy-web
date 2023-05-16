@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { decrypt } from './crypto';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers:{
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('session') || ''
+    'Authorization': 'Bearer ' + JSON.parse(decrypt(localStorage.getItem('session'))).input || ''
   }
 });
 
@@ -16,6 +17,7 @@ api.interceptors.response.use(
       localStorage.removeItem('session');
       window.location.href = '/';
     }
+    console.log(error)
     return Promise.reject(error);
   }
 );
