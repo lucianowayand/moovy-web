@@ -9,7 +9,7 @@ This is the frontend service for the Fullstack Challenge. It provides a user int
 * Axios
 * Crypto-js
 
-## Prerequisites
+## Pre-requisites
 To run this service, you need to have the following installed on your system:
 * Node.js
 
