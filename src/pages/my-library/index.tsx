@@ -31,7 +31,8 @@ export default function MyLibrary() {
                     imdbID: elements.movie.imdbID,
                     Poster: elements.movie.poster,
                     imdbRating: elements.movie.imdbRating,
-                    inLibrary: true
+                    Review: elements.review,
+                    inLibrary: true,
                 }
             }
             );
@@ -47,7 +48,7 @@ export default function MyLibrary() {
         {!loading ? <Box mt={3}>
             {movies.length > 0 ? <Grid container>
                 {movies.map((movie, index) => {
-                    return <Grid item xs={4}>
+                    return <Grid key={movie.imdbID} item xs={4}>
                         <MovieCard movie={movie} moviesArray={movies} index={index} setterFunction={setMovies} />
                     </Grid>
                 })}

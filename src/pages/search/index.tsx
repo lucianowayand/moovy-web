@@ -33,7 +33,8 @@ export default function Search() {
                     return {
                         ...movie,
                         imdbRating: movieRes.data.movie.imdbRating,
-                        inLibrary: movieRes.data.inLibrary
+                        inLibrary: movieRes.data.inLibrary,
+                        Review: movieRes.data.review,
                     };
                 });
 
