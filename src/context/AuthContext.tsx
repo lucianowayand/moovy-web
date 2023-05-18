@@ -47,7 +47,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [user])
 
     function logOut() {
-        setUser(undefined);
+        setUser(null);
         localStorage.removeItem('session')
         window.location.href = '/'
     }
@@ -57,7 +57,15 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             const res = await api.post('/users/login', { email, password })
             const encryptedSession = encrypt(res.data)
             localStorage.setItem('session', encryptedSession)
-            window.location.href = '/dashboard'
+            const payload = res.data.split(".")[1];
+            const decryptedUser = JSON.parse(atob(payload));
+            if (decryptedUser) {
+                setUser({
+                    id: decryptedUser.sub,
+                    full_name: decryptedUser.full_name,
+                    email: decryptedUser.email
+                })
+            }
 
         } catch (error) {
             alert(error)
