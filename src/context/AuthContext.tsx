@@ -38,10 +38,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
                     email: decryptedUser.email
                 })
             }
-        } else {
-            if (window.location.pathname !== '/') {
-                logOut()
-            }
         }
     }, [])
 

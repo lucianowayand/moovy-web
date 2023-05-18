@@ -1,5 +1,5 @@
 import useWindowDimensions from "../../hooks/useWindowDimensions"
-import { Box, Card, Typography } from "@mui/material"
+import { Box, Card, Link, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useAuth } from "../../context/AuthContext"
 import './style.css'
@@ -46,6 +46,9 @@ export default function Login() {
                             <button className="button">Login</button>
                         </Box>
                     </Box>
+                </Box>
+                <Box style={{display:"flex", justifyContent:"center"}}>
+                    <Typography fontFamily="Inter">Still don't have an account? <Link style={{ color: "black" }} href="/register">Sign up</Link></Typography>
                 </Box>
             </Card>
         </Box>
