@@ -38,7 +38,7 @@ export default function MyLibrary() {
             setMovies(moviesArray);
         } catch (error) {
             setMovies([]);
-            alert(error);
+            console.log(error);
         }
         setLoading(false);
     }
