@@ -23,6 +23,10 @@ export default function Search() {
         }
     }, [query]);
 
+    useEffect(() => {
+        if (!user) window.location.href = '/'
+    }, [user]);
+
     async function getMovies() {
         setLoading(true);
         try {

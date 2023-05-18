@@ -14,9 +14,8 @@ export default function MyLibrary() {
     const [movies, setMovies] = useState<Movie[]>([]);
 
     useEffect(() => {
-        if (user?.id) {
-            getMovies();
-        }
+        if (user?.id) getMovies()
+        if (!user) window.location.href = '/'
     }, [user]);
 
     async function getMovies() {

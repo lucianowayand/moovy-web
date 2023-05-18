@@ -13,6 +13,7 @@ export default function MovieCard({ movie, moviesArray, index, setterFunction }:
 
     async function assertDeleteReview() {
         if (movie.Review) {
+            console.log(movie.Review)
             setDialog(true);
         } else {
             removeFromLibrary();
